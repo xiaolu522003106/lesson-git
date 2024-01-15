@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>你的名字 - 个人介绍</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        header {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 1;
+        }
+
+        section {
+            position: relative;
+            z-index: 2;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        h1, h2, h3 {
+            color: #333;
+        }
+
+        p {
+            color: #666;
+            transition: color 0.3s ease;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: #fff;
+        }
+
+        /* JS添加的特效 */
+        .hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        /* JS触发特效的类 */
+        .reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 鼠标指到文字时的效果 */
+        section:hover {
+            transform: scale(1.05);
+        }
+
+        section:hover p, section:hover a {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div id="background"></div>
+
+    <header>
+        <h1 class="hidden">你的名字</h1>
+        <p class="hidden">热爱生活，追求梦想的人</p>
+    </header>
+
+    <section class="hidden">
+        <h2>关于我</h2>
+        <p>你好，我是[你的名字]，一位[你的职业/行业]。热爱学习和挑战，不断追求进步。</p>
+    </section>
+
+    <section class="hidden">
+        <h2>教育背景</h2>
+        <p>[你的学历] - [毕业院校/专业] - [毕业年份]</p>
+    </section>
+
+    <section class="hidden">
+        <h2>工作经历</h2>
+        <p>[公司名称] - [职位] - [工作时间]</p>
+        <p>在这个职位上，我积累了丰富的经验，包括[列举一两项工作内容或成就]。</p>
+    </section>
+
+    <section class="hidden">
+        <h2>技能</h2>
+        <p>我的技能包括但不限于：</p>
+        <ul>
+            <li>[技能1]</li>
+            <li>[技能2]</li>
+            <li>[技能3]</li>
+        </ul>
+    </section>
+
+    <section class="hidden">
+        <h2>兴趣爱好</h2>
+        <p>除了工作，我还热衷于[你的兴趣爱好]。在业余时间，我喜欢[具体描述你的兴趣爱好]。</p>
+    </section>
+
+    <section class="hidden">
+        <h2>联系方式</h2>
+        <p>如果您对我的个人介绍感兴趣，可以通过电子邮件<a href="mailto:你的邮箱">你的邮箱</a>或者在社交媒体平台<a href="https://www.linkedin.com/in/你的链接" target="_blank">你的LinkedIn</a>找到我。</p>
+    </section>
+
+    <script src="https://threejs.org/build/three.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Three.js创建背景
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('background').appendChild(renderer.domElement);
+
+            const geometry = new THREE.BufferGeometry();
+            const material = new THREE.PointsMaterial({ size: 0.02, color: 0xffffff });
+
+            const vertices = [];
+            for (let i = 0; i < 1000; i++) {
+                const x = (Math.random() - 0.5) * 10;
+                const y = (Math.random() - 0.5) * 10;
+                const z = (Math.random() - 0.5) * 10;
+                vertices.push(x, y, z);
+            }
+
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+            const points = new THREE.Points(geometry, material);
+            scene.add(points);
+
+            // 鼠标变形效果
+            document.body.style.cursor = 'url("https://i.imgur.com/TMKRrW4.png"), auto';
+
+            // 页面加载后逐个显示元素
+            const elements = document.querySelectorAll('.hidden');
+            elements.forEach((element, index) => {
+                setTimeout(() => {
+                    element.classList.add('reveal');
+                }, index * 300);
+            });
+
+            // 监听窗口大小变化
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+
+            // 渲染循环
+
+            
